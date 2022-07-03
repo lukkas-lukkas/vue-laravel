@@ -1,0 +1,10 @@
+version: "3"
+services:
+  vue-laravel-project:
+    build: .
+    image: vue-laravel-project
+    container_name: vue-laravel-project
+    volumes:
+    - ./application:/application
+    working_dir: /application
+    command: composer create-project --prefer-dist laravel/laravel . "^8"
