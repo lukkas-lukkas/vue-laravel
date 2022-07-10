@@ -9,6 +9,7 @@ RUN apk --update add --no-cache \
     nginx \
     bash \
     git \
+    npm \
     && rm -rf /var/cache/apk/* \
     && mkdir /run/nginx
 
