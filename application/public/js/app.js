@@ -5286,7 +5286,25 @@ __webpack_require__.r(__webpack_exports__);
         return;
       }
 
-      alert('Sending');
+      var url = 'http://localhost:9001/api/get-token';
+      var config = {
+        method: 'post',
+        body: new URLSearchParams({
+          'email': this.email,
+          'password': this.password
+        })
+      };
+      fetch(url, config).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        if (data.token) {
+          document.cookie = 'vue_laravel_token=' + data.token;
+          window.location.href = 'http://localhost:9001';
+        }
+      })["catch"](function (error) {
+        console.log('Fetch error', error);
+        alert('We had a little problem, please try later');
+      });
     }
   }
 });

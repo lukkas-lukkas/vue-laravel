@@ -77,7 +77,27 @@ export default {
         return;
       }
 
-      alert('Sending');
+      const url = 'http://localhost:9001/api/get-token';
+      const config = {
+        method: 'post',
+        body: new URLSearchParams({
+          'email': this.email,
+          'password': this.password
+        })
+      };
+
+      fetch(url, config)
+        .then(response => response.json())
+        .then(data => {
+          if (data.token) {
+            document.cookie = 'vue_laravel_token=' + data.token;
+            window.location.href = 'http://localhost:9001';
+          }
+        })
+        .catch(error => {
+          console.log('Fetch error', error);
+          alert('We had a little problem, please try later');
+        })
     }
   }
 }
