@@ -57,28 +57,28 @@
 </template>
 
 <script>
-  export default {
-    props: ['csrf_token'],
-    data() {
-      return {
-        email: '',
-        password: ''
+export default {
+  props: ['csrf_token'],
+  data() {
+    return {
+      email: '',
+      password: ''
+    }
+  },
+  methods: {
+    login() {
+      if (this.email.length == 0) {
+        alert('Email required');
+        return;
       }
-    },
-    methods: {
-      login() {
-        if (this.email.length == 0) {
-          alert('Email required');
-          return;
-        }
 
-        if (this.password.length == 0) {
-          alert('Password required');
-          return;
-        }
-
-        alert('Sending');
+      if (this.password.length == 0) {
+        alert('Password required');
+        return;
       }
+
+      alert('Sending');
     }
   }
+}
 </script>
