@@ -6,6 +6,7 @@
           <div class="card-header">Login</div>
           <div class="card-body">
             <form>
+              <input type="hidden" name="_token" :value="csrf_token">
               <div class="form-group row">
                 <label for="email" class="col-md-4 col-form-label text-md-right">E-mail</label>
 
@@ -54,3 +55,9 @@
     </div>
   </div>
 </template>
+
+<script>
+  export default {
+    props: ['csrf_token'],
+  }
+</script>
