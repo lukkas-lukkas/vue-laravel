@@ -5,13 +5,13 @@
         <div class="card">
           <div class="card-header">Login</div>
           <div class="card-body">
-            <form>
+            <div>
               <input type="hidden" name="_token" :value="csrf_token">
               <div class="form-group row">
                 <label for="email" class="col-md-4 col-form-label text-md-right">E-mail</label>
 
                 <div class="col-md-6">
-                  <input id="email" type="email" class="form-control" name="email" value="" required
+                  <input id="email" type="email" class="form-control" name="email" v-model="email" required
                     autocomplete="email" autofocus>
                 </div>
               </div>
@@ -20,7 +20,7 @@
                 <label for="password" class="col-md-4 col-form-label text-md-right">Senha</label>
 
                 <div class="col-md-6">
-                  <input id="password" type="password" class="form-control" name="password" required
+                  <input id="password" type="password" class="form-control" name="password" v-model="password" required
                     autocomplete="current-password">
                 </div>
               </div>
@@ -39,7 +39,7 @@
 
               <div class="form-group row mb-0 mt-4">
                 <div class="col-md-8 offset-md-4">
-                  <button type="submit" class="btn btn-primary">
+                  <button type="submit" class="btn btn-primary" @click="login">
                     Login
                   </button>
 
@@ -48,7 +48,7 @@
                   </a>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
@@ -59,5 +59,26 @@
 <script>
   export default {
     props: ['csrf_token'],
+    data() {
+      return {
+        email: '',
+        password: ''
+      }
+    },
+    methods: {
+      login() {
+        if (this.email.length == 0) {
+          alert('Email required');
+          return;
+        }
+
+        if (this.password.length == 0) {
+          alert('Password required');
+          return;
+        }
+
+        alert('Sending');
+      }
+    }
   }
 </script>
