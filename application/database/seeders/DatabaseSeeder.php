@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Client;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 
@@ -18,6 +19,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'Michael Scott',
             'email' => 'michael@test.com',
             'password' => 'admin',
+        ]);
+
+        Client::create([
+            'name' => 'Tony Stark',
         ]);
     }
 }
