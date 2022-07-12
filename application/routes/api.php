@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\TokenController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,4 +18,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/get-token', [TokenController::class, 'getToken']);
 
-Route::apiResource('client', ClientController::class);
+Route::apiResource('client', ClientController::class)->middleware('api.auth');
