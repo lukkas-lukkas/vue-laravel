@@ -5556,14 +5556,12 @@ var render = function render() {
     attrs: {
       href: "/"
     }
-  }, [_vm._v("Car store")]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c("div", {
+  }, [_vm._v("Clients adm")]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c("div", {
     staticClass: "collapse navbar-collapse",
     attrs: {
       id: "navbarSupportedContent"
     }
-  }, [_c("ul", {
-    staticClass: "navbar-nav me-auto mb-2 mb-lg-0"
-  }), _vm._v(" "), _c("div", {
+  }, [_vm._m(1), _vm._v(" "), _c("div", {
     staticClass: "d-flex"
   }, [_c("span", {
     staticClass: "text-white",
@@ -5593,6 +5591,28 @@ var staticRenderFns = [function () {
   }, [_c("span", {
     staticClass: "navbar-toggler-icon"
   })]);
+}, function () {
+  var _vm = this,
+      _c = _vm._self._c;
+
+  return _c("ul", {
+    staticClass: "navbar-nav me-auto mb-2 mb-lg-0"
+  }, [_c("li", {
+    staticClass: "nav-item"
+  }, [_c("a", {
+    staticClass: "nav-link active",
+    attrs: {
+      "aria-current": "page",
+      href: "/"
+    }
+  }, [_vm._v("Home")])]), _vm._v(" "), _c("li", {
+    staticClass: "nav-item"
+  }, [_c("a", {
+    staticClass: "nav-link",
+    attrs: {
+      href: "/clients"
+    }
+  }, [_vm._v("Clients")])])]);
 }];
 render._withStripped = true;
 
