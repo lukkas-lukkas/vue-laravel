@@ -18,4 +18,9 @@ class TokenService
             env('APP_NAME')
         );
     }
+
+    public function validate(string $token): bool
+    {
+        return Token::validate($token, env('JWT_SECRET')) === true && Token::validateExpiration($token) === true;
+    }
 }
