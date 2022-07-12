@@ -11,19 +11,31 @@ class ClientRepository
         return Client::create($data);
     }
 
-    public function delete(int $id): void
+    public function delete(int $id): bool
     {
-        Client::destroy($id);
+        $client = $this->findById($id);
+        
+        if ($client === null) {
+            return false;
+        }
+
+        $client->delete();
+
+        return true;
     }
 
-    public function findById(int $id): Client
+    public function findById(int $id): ?Client
     {
         return Client::find($id);
     }
 
-    public function update(int $id, array $data): Client
+    public function update(int $id, array $data): ?Client
     {
         $client = $this->findById($id);
+
+        if ($client === null) {
+            return null;
+        }
 
         $client->update($data);
 

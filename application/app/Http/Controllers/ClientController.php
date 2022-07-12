@@ -37,6 +37,10 @@ class ClientController extends Controller
     {
         $client = $this->repository->findById($id);
 
+        if ($client === null) {
+            return response()->json(['Client not found'], 404);
+        }
+
         return response()->json($client, 200);
     }
 
@@ -47,13 +51,21 @@ class ClientController extends Controller
 
         $client = $this->repository->update($id, $data);
 
+        if ($client === null) {
+            return response()->json(['Client not found'], 404);
+        }
+
         return response()->json($client, 200);
     }
 
     // METHOD: DELETE
     public function destroy(int $id)
     {
-        $this->repository->delete($id);
+        $result = $this->repository->delete($id);
+
+        if ($result === false) {
+            return response()->json(['Client not found'], 404);
+        }
 
         return response()->json(['success'], 200);
     }
