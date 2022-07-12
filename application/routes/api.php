@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\TokenController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,8 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/get-token', function () {
-    return response()->json([
-        'token' => 'abc123'
-    ]);
-});
+Route::post('/get-token', [TokenController::class, 'getToken']);
