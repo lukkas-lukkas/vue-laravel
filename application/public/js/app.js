@@ -5556,7 +5556,7 @@ var render = function render() {
     attrs: {
       href: "/"
     }
-  }, [_vm._v("Car rental")]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c("div", {
+  }, [_vm._v("Car store")]), _vm._v(" "), _vm._m(0), _vm._v(" "), _c("div", {
     staticClass: "collapse navbar-collapse",
     attrs: {
       id: "navbarSupportedContent"
