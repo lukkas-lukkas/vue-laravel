@@ -5298,7 +5298,7 @@ __webpack_require__.r(__webpack_exports__);
         return response.json();
       }).then(function (data) {
         if (data.token) {
-          document.cookie = 'vue_laravel_token=' + data.token;
+          document.cookie = "vue_laravel_token=".concat(data.token);
           window.location.href = 'http://localhost:9001';
         }
       })["catch"](function (error) {
