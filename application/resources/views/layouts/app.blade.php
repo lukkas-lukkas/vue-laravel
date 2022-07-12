@@ -1,6 +1,6 @@
 @extends('layouts.basic')
 
-@section('basic-content')
+@section('content')
     <nav-component></nav-component>
     @yield('app-content')
 @endSection
