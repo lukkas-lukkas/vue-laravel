@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,12 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/login', function () {
-    return view('login');
-})->name('login');
+Route::get('/login', [WebController::class, 'login'])->name('login');
 
 Route::middleware('web.auth')->group(function () {
-    Route::get('/', function () {
-        return 'Allowed access';
-    });
+    Route::get('/', [WebController::class, 'home']);
 });
