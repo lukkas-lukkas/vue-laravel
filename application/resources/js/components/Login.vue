@@ -57,6 +57,8 @@
 </template>
 
 <script>
+import { COOKIE_TOKEN, URL_BASE } from "../constants.js"
+
 export default {
   props: ['csrf_token'],
   data() {
@@ -77,7 +79,7 @@ export default {
         return;
       }
 
-      const url = 'http://localhost:9001/api/get-token';
+      const url = `${URL_BASE}/api/get-token`;
       const config = {
         method: 'post',
         body: new URLSearchParams({
@@ -90,8 +92,8 @@ export default {
         .then(response => response.json())
         .then(data => {
           if (data.token) {
-            document.cookie = `vue_laravel_token=${data.token}`;
-            window.location.href = 'http://localhost:9001';
+            document.cookie = `${COOKIE_TOKEN}=${data.token}`;
+            window.location.href = URL_BASE;
           }
         })
         .catch(error => {

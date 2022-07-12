@@ -33,9 +33,22 @@
                     -->
                 </ul>
                 <div class="d-flex">
-                    <a href="#" class="text-white">Logout</a>
+                    <span class="text-white" style="cursor: pointer;" @click="logout">Logout</span>
                 </div>
             </div>
         </div>
     </nav>
 </template>
+
+<script>
+import { COOKIE_TOKEN, URL_BASE } from "../constants.js"
+
+export default {
+    methods: {
+        logout() {
+            document.cookie = `${COOKIE_TOKEN}=`;
+            window.location.href = `${URL_BASE}/login`;
+        }
+    }
+}
+</script>
