@@ -90,7 +90,7 @@ export default {
         .then(response => response.json())
         .then(data => {
           if (data.token) {
-            document.cookie = 'vue_laravel_token=' + data.token;
+            document.cookie = `vue_laravel_token=${data.token}`;
             window.location.href = 'http://localhost:9001';
           }
         })
