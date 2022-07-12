@@ -10,6 +10,7 @@ RUN apk --update add --no-cache \
     bash \
     git \
     sqlite \
+    npm \
     && rm -rf /var/cache/apk/* \
     && mkdir /run/nginx
 
