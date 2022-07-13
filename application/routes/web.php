@@ -18,4 +18,5 @@ Route::get('/login', [WebController::class, 'login'])->name('login');
 
 Route::middleware('web.auth')->group(function () {
     Route::get('/', [WebController::class, 'home']);
+    Route::get('/clients', [WebController::class, 'clients']);
 });

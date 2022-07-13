@@ -15,4 +15,9 @@ class WebController extends Controller
     {
         return view('login');
     }
+
+    public function clients()
+    {
+        return view('clients');
+    }
 }
