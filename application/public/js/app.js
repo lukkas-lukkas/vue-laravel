@@ -5336,6 +5336,26 @@ __webpack_require__.r(__webpack_exports__);
     },
     closeModal: function closeModal() {
       btnCloseModal.click();
+    },
+    deleteClient: function deleteClient(id) {
+      var _this3 = this;
+
+      var token = this.getToken();
+      var url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client/").concat(id);
+      var config = {
+        method: 'delete',
+        headers: new Headers({
+          Authorization: "Bearer ".concat(token)
+        })
+      };
+      fetch(url, config).then(function (response) {
+        _this3.clients = _this3.clients.filter(function (client) {
+          return client.id != id;
+        });
+        alert('Delete client success');
+      })["catch"](function (error) {
+        return alert('Create error');
+      });
     }
   },
   mixins: [_mixins__WEBPACK_IMPORTED_MODULE_1__.getToken]
@@ -5456,7 +5476,16 @@ var render = function render() {
   }, [_c("table", {
     staticClass: "table table-hover"
   }, [_vm._m(0), _vm._v(" "), _vm.clients.length > 0 ? _c("tbody", _vm._l(_vm.clients, function (client) {
-    return _c("tr", [_c("td", [_vm._v(_vm._s(client.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(client.name))])]);
+    return _c("tr", [_c("td", [_vm._v(_vm._s(client.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(client.name))]), _vm._v(" "), _c("td", [_c("button", {
+      attrs: {
+        type: "button"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.deleteClient(client.id);
+        }
+      }
+    }, [_vm._v("Excluir")])])]);
   }), 0) : _vm._e(), _vm._v(" "), !_vm.loading && _vm.clients.length == 0 ? _c("tbody", [_vm._m(1)]) : _vm._e(), _vm._v(" "), _vm.loading ? _c("tbody", [_vm._m(2)]) : _vm._e()])]), _vm._v(" "), _vm._m(3)])])]), _vm._v(" "), _c("div", {
     staticClass: "modal fade",
     attrs: {
@@ -5527,7 +5556,7 @@ var staticRenderFns = [function () {
   var _vm = this,
       _c = _vm._self._c;
 
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("ID")]), _vm._v(" "), _c("th", [_vm._v("NAME")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("ID")]), _vm._v(" "), _c("th", [_vm._v("NAME")]), _vm._v(" "), _c("th", [_vm._v("#")])])]);
 }, function () {
   var _vm = this,
       _c = _vm._self._c;
