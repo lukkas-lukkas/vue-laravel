@@ -5279,31 +5279,14 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
-    var _this = this;
-
-    var token = this.getToken();
-    var url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client");
-    var config = {
-      method: 'get',
-      headers: new Headers({
-        'Authorization': "Bearer ".concat(token)
-      })
-    };
-    fetch(url, config).then(function (response) {
-      return response.json();
-    }).then(function (data) {
-      _this.clients = data;
-      _this.loading = false;
-    })["catch"](function (error) {
-      return alert('Error api');
-    });
+    this.loadList();
   },
   methods: {
     clearModal: function clearModal() {
       this.nameToCreate = '';
     },
     createClient: function createClient() {
-      var _this2 = this;
+      var _this = this;
 
       if (this.nameToCreate.length == 0) {
         alert('Name is required');
@@ -5325,9 +5308,9 @@ __webpack_require__.r(__webpack_exports__);
       fetch(url, config).then(function (response) {
         return response.json();
       }).then(function (client) {
-        _this2.clients.push(client);
+        _this.clients.push(client);
 
-        _this2.closeModal();
+        _this.closeModal();
 
         alert('Create client success');
       })["catch"](function (error) {
@@ -5338,7 +5321,7 @@ __webpack_require__.r(__webpack_exports__);
       btnCloseModal.click();
     },
     deleteClient: function deleteClient(id) {
-      var _this3 = this;
+      var _this2 = this;
 
       var token = this.getToken();
       var url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client/").concat(id);
@@ -5349,12 +5332,59 @@ __webpack_require__.r(__webpack_exports__);
         })
       };
       fetch(url, config).then(function (response) {
-        _this3.clients = _this3.clients.filter(function (client) {
+        _this2.clients = _this2.clients.filter(function (client) {
           return client.id != id;
         });
         alert('Delete client success');
       })["catch"](function (error) {
         return alert('Create error');
+      });
+    },
+    editClient: function editClient(id) {
+      var _this3 = this;
+
+      this.loading = true;
+      var name = prompt('New client name:');
+      var token = this.getToken();
+      var url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client/").concat(id);
+      var config = {
+        method: 'put',
+        body: JSON.stringify({
+          name: name
+        }),
+        headers: new Headers({
+          'Authorization': "Bearer ".concat(token),
+          'Content-Type': 'application/json'
+        })
+      };
+      fetch(url, config).then(function (response) {
+        _this3.loadList();
+
+        alert('Client update success');
+      })["catch"](function (error) {
+        return alert('Error api');
+      })["finally"](function () {
+        _this3.loading = false;
+      });
+    },
+    loadList: function loadList() {
+      var _this4 = this;
+
+      var token = this.getToken();
+      var url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client");
+      var config = {
+        method: 'get',
+        headers: new Headers({
+          'Authorization': "Bearer ".concat(token)
+        })
+      };
+      fetch(url, config).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        _this4.clients = data;
+        _this4.loading = false;
+      })["catch"](function (error) {
+        return alert('Error api');
       });
     }
   },
@@ -5475,8 +5505,19 @@ var render = function render() {
     staticClass: "card-body"
   }, [_c("table", {
     staticClass: "table table-hover"
-  }, [_vm._m(0), _vm._v(" "), _vm.clients.length > 0 ? _c("tbody", _vm._l(_vm.clients, function (client) {
+  }, [_vm._m(0), _vm._v(" "), _vm.clients.length > 0 && !_vm.loading ? _c("tbody", _vm._l(_vm.clients, function (client) {
     return _c("tr", [_c("td", [_vm._v(_vm._s(client.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(client.name))]), _vm._v(" "), _c("td", [_c("button", {
+      staticClass: "btn btn-primary",
+      attrs: {
+        type: "button"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.editClient(client.id);
+        }
+      }
+    }, [_vm._v("Edit")]), _vm._v(" "), _c("button", {
+      staticClass: "btn btn-danger",
       attrs: {
         type: "button"
       },
@@ -5485,7 +5526,7 @@ var render = function render() {
           return _vm.deleteClient(client.id);
         }
       }
-    }, [_vm._v("Excluir")])])]);
+    }, [_vm._v("Delete")])])]);
   }), 0) : _vm._e(), _vm._v(" "), !_vm.loading && _vm.clients.length == 0 ? _c("tbody", [_vm._m(1)]) : _vm._e(), _vm._v(" "), _vm.loading ? _c("tbody", [_vm._m(2)]) : _vm._e()])]), _vm._v(" "), _vm._m(3)])])]), _vm._v(" "), _c("div", {
     staticClass: "modal fade",
     attrs: {

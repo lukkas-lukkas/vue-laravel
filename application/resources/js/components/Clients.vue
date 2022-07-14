@@ -17,12 +17,13 @@
                                 </tr>
                             </thead>
 
-                            <tbody v-if="clients.length > 0">
+                            <tbody v-if="clients.length > 0 && !loading">
                                 <tr v-for="client in clients">
                                     <td>{{ client.id }}</td>
                                     <td>{{ client.name }}</td>
                                     <td>
-                                        <button type="button" @click="deleteClient(client.id)">Excluir</button>
+                                        <button type="button" class="btn btn-primary" @click="editClient(client.id)">Edit</button>
+                                        <button type="button" class="btn btn-danger" @click="deleteClient(client.id)">Delete</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -96,21 +97,7 @@ export default {
         }
     },
     mounted() {
-        const token = this.getToken();
-        const url = `${URL_BASE}/api/client`;
-        const config = {
-            method: 'get',
-            headers: new Headers({
-                'Authorization': `Bearer ${token}`
-            })
-        };
-        fetch(url, config)
-            .then(response => response.json())
-            .then(data => {
-                this.clients = data;
-                this.loading = false;
-            })
-            .catch(error => alert('Error api'))
+        this.loadList();
     },
     methods: {
         clearModal() {
@@ -168,6 +155,50 @@ export default {
 
                 })
                 .catch(error => alert('Create error'));
+        },
+        editClient(id) {
+            this.loading = true;
+            const name = prompt('New client name:');
+
+            const token = this.getToken();
+            const url = `${URL_BASE}/api/client/${id}`;
+            const config = {
+                method: 'put',
+                body: JSON.stringify({name}),
+                headers: new Headers({
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                })
+            };
+
+            fetch(url, config)
+                .then(response => {
+                    this.loadList();
+                    alert('Client update success');                    
+                })
+                .catch(error => alert('Error api'))
+                .finally(() => {
+                    this.loading = false;
+                })
+
+            
+        },
+        loadList() {
+            const token = this.getToken();
+            const url = `${URL_BASE}/api/client`;
+            const config = {
+                method: 'get',
+                headers: new Headers({
+                    'Authorization': `Bearer ${token}`
+                })
+            };
+            fetch(url, config)
+                .then(response => response.json())
+                .then(data => {
+                    this.clients = data;
+                    this.loading = false;
+                })
+                .catch(error => alert('Error api'))
         }
     },
     mixins: [getToken]
