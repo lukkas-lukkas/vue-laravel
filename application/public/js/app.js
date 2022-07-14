@@ -5274,7 +5274,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       clients: [],
-      loading: true
+      loading: true,
+      nameToCreate: ''
     };
   },
   mounted: function mounted() {
@@ -5296,6 +5297,46 @@ __webpack_require__.r(__webpack_exports__);
     })["catch"](function (error) {
       return alert('Error api');
     });
+  },
+  methods: {
+    clearModal: function clearModal() {
+      this.nameToCreate = '';
+    },
+    createClient: function createClient() {
+      var _this2 = this;
+
+      if (this.nameToCreate.length == 0) {
+        alert('Name is required');
+        this.closeModal();
+        return;
+      }
+
+      var formData = new FormData();
+      formData.append('name', this.nameToCreate);
+      var token = this.getToken();
+      var url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client");
+      var config = {
+        method: 'post',
+        body: formData,
+        headers: new Headers({
+          Authorization: "Bearer ".concat(token)
+        })
+      };
+      fetch(url, config).then(function (response) {
+        return response.json();
+      }).then(function (client) {
+        _this2.clients.push(client);
+
+        _this2.closeModal();
+
+        alert('Create client success');
+      })["catch"](function (error) {
+        return alert('Create error');
+      });
+    },
+    closeModal: function closeModal() {
+      btnCloseModal.click();
+    }
   },
   mixins: [_mixins__WEBPACK_IMPORTED_MODULE_1__.getToken]
 });
@@ -5416,7 +5457,70 @@ var render = function render() {
     staticClass: "table table-hover"
   }, [_vm._m(0), _vm._v(" "), _vm.clients.length > 0 ? _c("tbody", _vm._l(_vm.clients, function (client) {
     return _c("tr", [_c("td", [_vm._v(_vm._s(client.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(client.name))])]);
-  }), 0) : _vm._e(), _vm._v(" "), !_vm.loading && _vm.clients.length == 0 ? _c("tbody", [_vm._m(1)]) : _vm._e(), _vm._v(" "), _vm.loading ? _c("tbody", [_vm._m(2)]) : _vm._e()])])])])])]);
+  }), 0) : _vm._e(), _vm._v(" "), !_vm.loading && _vm.clients.length == 0 ? _c("tbody", [_vm._m(1)]) : _vm._e(), _vm._v(" "), _vm.loading ? _c("tbody", [_vm._m(2)]) : _vm._e()])]), _vm._v(" "), _vm._m(3)])])]), _vm._v(" "), _c("div", {
+    staticClass: "modal fade",
+    attrs: {
+      id: "formModal",
+      tabindex: "-1",
+      "aria-labelledby": "formModalLabel",
+      "aria-hidden": "true"
+    }
+  }, [_c("div", {
+    staticClass: "modal-dialog"
+  }, [_c("div", {
+    staticClass: "modal-content"
+  }, [_vm._m(4), _vm._v(" "), _c("div", {
+    staticClass: "modal-body"
+  }, [_c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    staticClass: "form-label",
+    attrs: {
+      "for": "nameToCreate"
+    }
+  }, [_vm._v("Name")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.nameToCreate,
+      expression: "nameToCreate"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      id: "nameToCreate",
+      placeholder: "Client name"
+    },
+    domProps: {
+      value: _vm.nameToCreate
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.nameToCreate = $event.target.value;
+      }
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "modal-footer"
+  }, [_c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      id: "btnCloseModal",
+      type: "button",
+      "data-bs-dismiss": "modal"
+    },
+    on: {
+      click: _vm.clearModal
+    }
+  }, [_vm._v("Close")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: _vm.createClient
+    }
+  }, [_vm._v("Save")])])])])])]);
 };
 
 var staticRenderFns = [function () {
@@ -5446,6 +5550,39 @@ var staticRenderFns = [function () {
   }, [_c("span", {
     staticClass: "placeholder col-3"
   })])]);
+}, function () {
+  var _vm = this,
+      _c = _vm._self._c;
+
+  return _c("div", {
+    staticClass: "card-footer text-end"
+  }, [_c("button", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      type: "button",
+      "data-bs-toggle": "modal",
+      "data-bs-target": "#formModal"
+    }
+  }, [_vm._v("Create")])]);
+}, function () {
+  var _vm = this,
+      _c = _vm._self._c;
+
+  return _c("div", {
+    staticClass: "modal-header"
+  }, [_c("h5", {
+    staticClass: "modal-title",
+    attrs: {
+      id: "formModalLabel"
+    }
+  }, [_vm._v("Create client")]), _vm._v(" "), _c("button", {
+    staticClass: "btn-close",
+    attrs: {
+      type: "button",
+      "data-bs-dismiss": "modal",
+      "aria-label": "Close"
+    }
+  })]);
 }];
 render._withStripped = true;
 
