@@ -13,6 +13,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>NAME</th>
+                                    <th>#</th>
                                 </tr>
                             </thead>
 
@@ -20,6 +21,9 @@
                                 <tr v-for="client in clients">
                                     <td>{{ client.id }}</td>
                                     <td>{{ client.name }}</td>
+                                    <td>
+                                        <button type="button" @click="deleteClient(client.id)">Excluir</button>
+                                    </td>
                                 </tr>
                             </tbody>
 
@@ -145,6 +149,25 @@ export default {
         },
         closeModal() {
             btnCloseModal.click();
+        },
+        deleteClient(id) {
+            const token = this.getToken();
+
+            const url = `${URL_BASE}/api/client/${id}`;
+            const config = {
+                method: 'delete',
+                headers: new Headers({
+                    Authorization: `Bearer ${token}`
+                })
+            };
+
+            fetch(url, config)
+                .then(response => {
+                    this.clients = this.clients.filter(client => client.id != id);
+                    alert('Delete client success');
+
+                })
+                .catch(error => alert('Create error'));
         }
     },
     mixins: [getToken]
