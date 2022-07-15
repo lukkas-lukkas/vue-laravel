@@ -5306,21 +5306,15 @@ __webpack_require__.r(__webpack_exports__);
     loadList: function loadList() {
       var _this2 = this;
 
-      var token = this.getToken();
-      var url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_1__.URL_BASE, "/api/client");
-      var config = {
-        method: 'get',
-        headers: new Headers({
-          'Authorization': "Bearer ".concat(token)
-        })
-      };
-      fetch(url, config).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        _this2.clients = data;
+      _clientHttp__WEBPACK_IMPORTED_MODULE_0__["default"].get('/api/client', {
+        headers: {
+          Authorization: "Bearer ".concat(this.getToken())
+        }
+      }).then(function (response) {
+        _this2.clients = response.data;
         _this2.loading = false;
       })["catch"](function (error) {
-        return alert('Error api');
+        alert('Error api');
       });
     },
     addNewClient: function addNewClient(client) {

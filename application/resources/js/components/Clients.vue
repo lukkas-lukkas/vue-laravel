@@ -100,21 +100,16 @@ export default {
             this.clientSelected = client;
         },
         loadList() {
-            const token = this.getToken();
-            const url = `${URL_BASE}/api/client`;
-            const config = {
-                method: 'get',
-                headers: new Headers({
-                    'Authorization': `Bearer ${token}`
-                })
-            };
-            fetch(url, config)
-                .then(response => response.json())
-                .then(data => {
-                    this.clients = data;
-                    this.loading = false;
-                })
-                .catch(error => alert('Error api'))
+            clientHttp.get('/api/client', {
+                headers: {
+                    Authorization: `Bearer ${this.getToken()}`
+                }
+            }).then(response => {
+                this.clients = response.data;
+                this.loading = false;
+            }).catch(error => {
+                alert('Error api');
+            })
         },
         addNewClient(client) {
             this.clients.push(client);
