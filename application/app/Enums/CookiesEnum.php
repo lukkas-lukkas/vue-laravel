@@ -4,5 +4,5 @@ namespace App\Enums;
 
 class CookiesEnum
 {
-    public const VUE_LARAVEL_TOKEN = 'vue_laravel_token';
+    public const CLIENTS_ADMIN_TOKEN = 'clients_admin_token';
 }

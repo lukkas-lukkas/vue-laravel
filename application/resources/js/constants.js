@@ -1,4 +1,4 @@
-const COOKIE_TOKEN = 'vue_laravel_token';
+const COOKIE_TOKEN = 'clients_admin_token';
 
 const URL_BASE = 'http://localhost:9001';
 

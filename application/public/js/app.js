@@ -6141,7 +6141,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "COOKIE_TOKEN": () => (/* binding */ COOKIE_TOKEN),
 /* harmony export */   "URL_BASE": () => (/* binding */ URL_BASE)
 /* harmony export */ });
-var COOKIE_TOKEN = 'vue_laravel_token';
+var COOKIE_TOKEN = 'clients_admin_token';
 var URL_BASE = 'http://localhost:9001';
 
 

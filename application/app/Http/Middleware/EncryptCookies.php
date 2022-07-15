@@ -13,6 +13,6 @@ class EncryptCookies extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        CookiesEnum::VUE_LARAVEL_TOKEN
+        CookiesEnum::CLIENTS_ADMIN_TOKEN
     ];
 }

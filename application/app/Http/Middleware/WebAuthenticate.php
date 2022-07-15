@@ -15,7 +15,7 @@ class WebAuthenticate
     }
     public function handle(Request $request, Closure $next)
     {
-        $token = $request->cookie(CookiesEnum::VUE_LARAVEL_TOKEN);
+        $token = $request->cookie(CookiesEnum::CLIENTS_ADMIN_TOKEN);
 
         if (
             $token === null 

@@ -1,9 +1,9 @@
 version: "3"
 services:
-  app-vue-laravel:
+  app-clients-admin:
     build: .
-    image: app-vue-laravel
-    container_name: app-vue-laravel
+    image: app-clients-admin
+    container_name: app-clients-admin
     volumes:
     - ./application:/application
     ports:
