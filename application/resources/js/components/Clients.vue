@@ -59,28 +59,8 @@
             </div>
         </div>
 
-        <!--Modal-->
-        <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="formModalLabel">Create client</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="nameToCreate" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="nameToCreate" v-model="nameToCreate" placeholder="Client name">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="btnCloseModal" type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="clearModal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="createClient">Save</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--Modal-->
+        <modal-form-component @new-client-created-event="addNewClient"></modal-form-component>
+        
     </div>
 </template>
 
@@ -93,50 +73,12 @@ export default {
         return {
             clients: [],
             loading: true,
-            nameToCreate: '',
         }
     },
     mounted() {
         this.loadList();
     },
     methods: {
-        clearModal() {
-            this.nameToCreate = '';
-        },
-        createClient() {
-            if (this.nameToCreate.length == 0) {
-                alert('Name is required');
-                this.closeModal();
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('name', this.nameToCreate);
-
-            const token = this.getToken();
-
-            const url = `${URL_BASE}/api/client`;
-            const config = {
-                method: 'post',
-                body: formData,
-                headers: new Headers({
-                    Authorization: `Bearer ${token}`
-                })
-            };
-
-            fetch(url, config)
-                .then(response => response.json())
-                .then(client => {
-                    this.clients.push(client);
-                    this.closeModal();
-                    alert('Create client success');
-
-                })
-                .catch(error => alert('Create error'));
-        },
-        closeModal() {
-            btnCloseModal.click();
-        },
         deleteClient(id) {
             const token = this.getToken();
 
@@ -199,6 +141,9 @@ export default {
                     this.loading = false;
                 })
                 .catch(error => alert('Error api'))
+        },
+        addNewClient(client) {
+            this.clients.push(client);
         }
     },
     mixins: [getToken]
