@@ -5574,7 +5574,7 @@ var render = function render() {
       },
       on: {
         click: function click($event) {
-          return _vm.editClientOpen(client);
+          return _vm.editClient(client);
         }
       }
     }, [_vm._v("Edit")]), _vm._v(" "), _c("button", {

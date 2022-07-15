@@ -23,7 +23,7 @@
                                     <td>{{ client.name }}</td>
                                     <td>
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                            data-bs-target="#formModal" @click="editClientOpen(client)">Edit</button>
+                                            data-bs-target="#formModal" @click="editClient(client)">Edit</button>
                                         <button type="button" class="btn btn-danger"
                                             @click="deleteClient(client.id)">Delete</button>
                                     </td>
