@@ -58,6 +58,7 @@
 
 <script>
 import { COOKIE_TOKEN, URL_BASE } from "../constants.js"
+import clientHttp from "../clientHttp";
 
 export default {
   props: ['csrf_token'],
@@ -79,27 +80,37 @@ export default {
         return;
       }
 
-      const url = `${URL_BASE}/api/get-token`;
-      const config = {
-        method: 'post',
-        body: new URLSearchParams({
-          'email': this.email,
-          'password': this.password
-        })
-      };
+      clientHttp.post('/api/get-token', {
+        'email': this.email,
+        'password': this.password
+      }).then(response => {
 
-      fetch(url, config)
-        .then(response => response.json())
-        .then(data => {
-          if (data.token) {
-            document.cookie = `${COOKIE_TOKEN}=${data.token}`;
-            window.location.href = URL_BASE;
+        document.cookie = `${COOKIE_TOKEN}=${response.data.token}`;
+        window.location.href = URL_BASE;
+        
+      }).catch(error => {
+        //https://axios-http.com/docs/handling_errors
+        if (error.response) {
+
+          switch (error.response.status) {            
+            case 422:
+              console.error('Payload validation error to get token');
+              alert('We had a little problem, please try later');
+              break;
+
+            case 401:
+              alert('User or password invalid.')
+              break;
+
+            default:
+              console.error('Req to get token, result in status code '.error.response.status);
+              alert('We had a little problem, please try later');
           }
-        })
-        .catch(error => {
-          console.log('Fetch error', error);
+
+        } else {
           alert('We had a little problem, please try later');
-        })
+        }
+      });
     }
   }
 }

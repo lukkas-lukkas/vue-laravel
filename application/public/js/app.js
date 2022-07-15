@@ -5355,6 +5355,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants.js */ "./resources/js/constants.js");
+/* harmony import */ var _clientHttp__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../clientHttp */ "./resources/js/clientHttp.js");
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['csrf_token'],
@@ -5376,24 +5378,32 @@ __webpack_require__.r(__webpack_exports__);
         return;
       }
 
-      var url = "".concat(_constants_js__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/get-token");
-      var config = {
-        method: 'post',
-        body: new URLSearchParams({
-          'email': this.email,
-          'password': this.password
-        })
-      };
-      fetch(url, config).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        if (data.token) {
-          document.cookie = "".concat(_constants_js__WEBPACK_IMPORTED_MODULE_0__.COOKIE_TOKEN, "=").concat(data.token);
-          window.location.href = _constants_js__WEBPACK_IMPORTED_MODULE_0__.URL_BASE;
-        }
+      _clientHttp__WEBPACK_IMPORTED_MODULE_1__["default"].post('/api/get-token', {
+        'email': this.email,
+        'password': this.password
+      }).then(function (response) {
+        document.cookie = "".concat(_constants_js__WEBPACK_IMPORTED_MODULE_0__.COOKIE_TOKEN, "=").concat(response.data.token);
+        window.location.href = _constants_js__WEBPACK_IMPORTED_MODULE_0__.URL_BASE;
       })["catch"](function (error) {
-        console.log('Fetch error', error);
-        alert('We had a little problem, please try later');
+        //https://axios-http.com/docs/handling_errors
+        if (error.response) {
+          switch (error.response.status) {
+            case 422:
+              console.error('Payload validation error to get token');
+              alert('We had a little problem, please try later');
+              break;
+
+            case 401:
+              alert('User or password invalid.');
+              break;
+
+            default:
+              console.error('Req to get token, result in status code '.error.response.status);
+              alert('We had a little problem, please try later');
+          }
+        } else {
+          alert('We had a little problem, please try later');
+        }
       });
     }
   }
@@ -6112,6 +6122,28 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/clientHttp.js":
+/*!************************************!*\
+  !*** ./resources/js/clientHttp.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constants */ "./resources/js/constants.js");
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (axios__WEBPACK_IMPORTED_MODULE_0___default().create({
+  baseURL: _constants__WEBPACK_IMPORTED_MODULE_1__.URL_BASE
+}));
 
 /***/ }),
 
@@ -40933,6 +40965,18 @@ module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBun
 /******/ 				}
 /******/ 			}
 /******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
 /******/ 		};
 /******/ 	})();
 /******/ 	
