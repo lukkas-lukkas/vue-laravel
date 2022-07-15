@@ -61,7 +61,7 @@
             </div>
         </div>
 
-        <modal-form-component @new-client-created-event="addNewClient" @client-updated-event="updateClient"
+        <modal-form-component @new-client-created-event="addNewClient" @client-updated-event="updateClient" @modal-closed-event="resetModal"
             :client="clientSelected"></modal-form-component>
 
     </div>
@@ -128,6 +128,9 @@ export default {
         updateClient(client) {
             const index = this.clients.findIndex(c => c.id == client.id);
             this.$set(this.clients, index, client);
+        },
+        resetModal() {
+            this.clientSelected = null;
         }
     },
     mixins: [getToken]

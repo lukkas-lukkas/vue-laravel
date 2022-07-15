@@ -5333,6 +5333,9 @@ __webpack_require__.r(__webpack_exports__);
         return c.id == client.id;
       });
       this.$set(this.clients, index, client);
+    },
+    resetModal: function resetModal() {
+      this.clientSelected = null;
     }
   },
   mixins: [_mixins__WEBPACK_IMPORTED_MODULE_1__.getToken]
@@ -5434,6 +5437,7 @@ __webpack_require__.r(__webpack_exports__);
     clearModal: function clearModal() {
       this.clientData = null;
       this.name = '';
+      this.$emit('modal-closed-event');
     },
     closeModal: function closeModal() {
       btnCloseModal.click();
@@ -5594,7 +5598,8 @@ var render = function render() {
     },
     on: {
       "new-client-created-event": _vm.addNewClient,
-      "client-updated-event": _vm.updateClient
+      "client-updated-event": _vm.updateClient,
+      "modal-closed-event": _vm.resetModal
     }
   })], 1);
 };

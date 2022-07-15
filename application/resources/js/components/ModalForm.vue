@@ -49,6 +49,7 @@ export default {
         clearModal() {
             this.clientData = null;
             this.name = '';
+            this.$emit('modal-closed-event');
         },
         closeModal() {
             btnCloseModal.click();
