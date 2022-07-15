@@ -21,7 +21,7 @@
 
                 <div class="col-md-6">
                   <input id="password" type="password" class="form-control" name="password" v-model="password" required
-                    autocomplete="current-password">
+                    autocomplete="current-password" v-on:keyup.enter="login">
                 </div>
               </div>
 
@@ -86,7 +86,7 @@ export default {
       }).then(response => {
 
         document.cookie = `${COOKIE_TOKEN}=${response.data.token}`;
-        window.location.href = URL_BASE;
+        window.location.href = URL_BASE + '/clients';
         
       }).catch(error => {
         //https://axios-http.com/docs/handling_errors
