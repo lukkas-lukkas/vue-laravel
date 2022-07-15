@@ -31,27 +31,68 @@ import { getToken } from '../mixins';
 export default {
     data() {
         return {
-            name: ''
+            name: '',
+            clientData: null,
+        }
+    },
+    props: ['client'],
+    watch: {
+        client() {
+            if (this.client) {
+                this.name = this.client.name;
+            }
+            
+            this.clientData = this.client;
         }
     },
     methods: {
         clearModal() {
+            this.clientData = null;
             this.name = '';
         },
         closeModal() {
             btnCloseModal.click();
         },
-        save() {            
+        save() {
             if (this.name.length == 0) {
                 alert('Name is required');
                 this.closeModal();
                 return;
             }
 
+            const token = this.getToken();
+
+            if (this.clientData) {
+                // EDIT
+
+                if (this.name == this.clientData.name) {
+                    this.closeModal();
+                    return;
+                }
+                
+                const url = `${URL_BASE}/api/client/${this.clientData.id}`;
+                const config = {
+                    method: 'put',
+                    body: JSON.stringify({name: this.name}),
+                    headers: new Headers({
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    })
+                };
+
+                fetch(url, config)
+                    .then(response => {
+                        alert('Client update success');                    
+                    })
+                    .catch(error => alert('Error api'));
+                this.closeModal();
+                return;
+            }
+
+            // CREATE
+
             const formData = new FormData();
             formData.append('name', this.name);
-
-            const token = this.getToken();
 
             const url = `${URL_BASE}/api/client`;
             const config = {

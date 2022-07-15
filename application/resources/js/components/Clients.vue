@@ -22,8 +22,10 @@
                                     <td>{{ client.id }}</td>
                                     <td>{{ client.name }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-primary" @click="editClient(client.id)">Edit</button>
-                                        <button type="button" class="btn btn-danger" @click="deleteClient(client.id)">Delete</button>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#formModal" @click="editClient(client)">Edit</button>
+                                        <button type="button" class="btn btn-danger"
+                                            @click="deleteClient(client.id)">Delete</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -59,8 +61,8 @@
             </div>
         </div>
 
-        <modal-form-component @new-client-created-event="addNewClient"></modal-form-component>
-        
+        <modal-form-component @new-client-created-event="addNewClient" :client="clientSelected"></modal-form-component>
+
     </div>
 </template>
 
@@ -73,6 +75,7 @@ export default {
         return {
             clients: [],
             loading: true,
+            clientSelected: null,
         }
     },
     mounted() {
@@ -98,32 +101,9 @@ export default {
                 })
                 .catch(error => alert('Create error'));
         },
-        editClient(id) {
-            this.loading = true;
-            const name = prompt('New client name:');
-
-            const token = this.getToken();
-            const url = `${URL_BASE}/api/client/${id}`;
-            const config = {
-                method: 'put',
-                body: JSON.stringify({name}),
-                headers: new Headers({
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                })
-            };
-
-            fetch(url, config)
-                .then(response => {
-                    this.loadList();
-                    alert('Client update success');                    
-                })
-                .catch(error => alert('Error api'))
-                .finally(() => {
-                    this.loading = false;
-                })
-
-            
+        editClient(client) {
+            console.log("EDIT CLIENT CLICKED", client);
+            this.clientSelected = client;
         },
         loadList() {
             const token = this.getToken();

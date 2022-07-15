@@ -5274,7 +5274,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       clients: [],
-      loading: true
+      loading: true,
+      clientSelected: null
     };
   },
   mounted: function mounted() {
@@ -5301,35 +5302,12 @@ __webpack_require__.r(__webpack_exports__);
         return alert('Create error');
       });
     },
-    editClient: function editClient(id) {
-      var _this2 = this;
-
-      this.loading = true;
-      var name = prompt('New client name:');
-      var token = this.getToken();
-      var url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client/").concat(id);
-      var config = {
-        method: 'put',
-        body: JSON.stringify({
-          name: name
-        }),
-        headers: new Headers({
-          'Authorization': "Bearer ".concat(token),
-          'Content-Type': 'application/json'
-        })
-      };
-      fetch(url, config).then(function (response) {
-        _this2.loadList();
-
-        alert('Client update success');
-      })["catch"](function (error) {
-        return alert('Error api');
-      })["finally"](function () {
-        _this2.loading = false;
-      });
+    editClient: function editClient(client) {
+      console.log("EDIT CLIENT CLICKED", client);
+      this.clientSelected = client;
     },
     loadList: function loadList() {
-      var _this3 = this;
+      var _this2 = this;
 
       var token = this.getToken();
       var url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client");
@@ -5342,8 +5320,8 @@ __webpack_require__.r(__webpack_exports__);
       fetch(url, config).then(function (response) {
         return response.json();
       }).then(function (data) {
-        _this3.clients = data;
-        _this3.loading = false;
+        _this2.clients = data;
+        _this2.loading = false;
       })["catch"](function (error) {
         return alert('Error api');
       });
@@ -5433,11 +5411,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      name: ''
+      name: '',
+      clientData: null
     };
+  },
+  props: ['client'],
+  watch: {
+    client: function client() {
+      if (this.client) {
+        this.name = this.client.name;
+      }
+
+      this.clientData = this.client;
+    }
   },
   methods: {
     clearModal: function clearModal() {
+      this.clientData = null;
       this.name = '';
     },
     closeModal: function closeModal() {
@@ -5452,9 +5442,39 @@ __webpack_require__.r(__webpack_exports__);
         return;
       }
 
+      var token = this.getToken();
+
+      if (this.clientData) {
+        // EDIT
+        if (this.name == this.clientData.name) {
+          this.closeModal();
+          return;
+        }
+
+        var _url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client/").concat(this.clientData.id);
+
+        var _config = {
+          method: 'put',
+          body: JSON.stringify({
+            name: this.name
+          }),
+          headers: new Headers({
+            'Authorization': "Bearer ".concat(token),
+            'Content-Type': 'application/json'
+          })
+        };
+        fetch(_url, _config).then(function (response) {
+          alert('Client update success');
+        })["catch"](function (error) {
+          return alert('Error api');
+        });
+        this.closeModal();
+        return;
+      } // CREATE
+
+
       var formData = new FormData();
       formData.append('name', this.name);
-      var token = this.getToken();
       var url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client");
       var config = {
         method: 'post',
@@ -5539,11 +5559,13 @@ var render = function render() {
     return _c("tr", [_c("td", [_vm._v(_vm._s(client.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(client.name))]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-primary",
       attrs: {
-        type: "button"
+        type: "button",
+        "data-bs-toggle": "modal",
+        "data-bs-target": "#formModal"
       },
       on: {
         click: function click($event) {
-          return _vm.editClient(client.id);
+          return _vm.editClient(client);
         }
       }
     }, [_vm._v("Edit")]), _vm._v(" "), _c("button", {
@@ -5558,6 +5580,9 @@ var render = function render() {
       }
     }, [_vm._v("Delete")])])]);
   }), 0) : _vm._e(), _vm._v(" "), !_vm.loading && _vm.clients.length == 0 ? _c("tbody", [_vm._m(1)]) : _vm._e(), _vm._v(" "), _vm.loading ? _c("tbody", [_vm._m(2)]) : _vm._e()])]), _vm._v(" "), _vm._m(3)])])]), _vm._v(" "), _c("modal-form-component", {
+    attrs: {
+      client: _vm.clientSelected
+    },
     on: {
       "new-client-created-event": _vm.addNewClient
     }
