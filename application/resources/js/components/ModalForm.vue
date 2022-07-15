@@ -81,7 +81,9 @@ export default {
                 };
 
                 fetch(url, config)
-                    .then(response => {
+                    .then(response => response.json())
+                    .then(clientUpdated => {
+                        this.$emit('client-updated-event', clientUpdated);
                         alert('Client update success');                    
                     })
                     .catch(error => alert('Error api'));

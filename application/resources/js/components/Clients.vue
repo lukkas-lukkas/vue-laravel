@@ -23,7 +23,7 @@
                                     <td>{{ client.name }}</td>
                                     <td>
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                            data-bs-target="#formModal" @click="editClient(client)">Edit</button>
+                                            data-bs-target="#formModal" @click="editClientOpen(client)">Edit</button>
                                         <button type="button" class="btn btn-danger"
                                             @click="deleteClient(client.id)">Delete</button>
                                     </td>
@@ -61,7 +61,8 @@
             </div>
         </div>
 
-        <modal-form-component @new-client-created-event="addNewClient" :client="clientSelected"></modal-form-component>
+        <modal-form-component @new-client-created-event="addNewClient" @client-updated-event="updateClient"
+            :client="clientSelected"></modal-form-component>
 
     </div>
 </template>
@@ -102,7 +103,6 @@ export default {
                 .catch(error => alert('Create error'));
         },
         editClient(client) {
-            console.log("EDIT CLIENT CLICKED", client);
             this.clientSelected = client;
         },
         loadList() {
@@ -124,6 +124,10 @@ export default {
         },
         addNewClient(client) {
             this.clients.push(client);
+        },
+        updateClient(client) {
+            const index = this.clients.findIndex(c => c.id == client.id);
+            this.$set(this.clients, index, client);
         }
     },
     mixins: [getToken]

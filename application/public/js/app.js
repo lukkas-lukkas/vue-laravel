@@ -5303,7 +5303,6 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     editClient: function editClient(client) {
-      console.log("EDIT CLIENT CLICKED", client);
       this.clientSelected = client;
     },
     loadList: function loadList() {
@@ -5328,6 +5327,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     addNewClient: function addNewClient(client) {
       this.clients.push(client);
+    },
+    updateClient: function updateClient(client) {
+      var index = this.clients.findIndex(function (c) {
+        return c.id == client.id;
+      });
+      this.$set(this.clients, index, client);
     }
   },
   mixins: [_mixins__WEBPACK_IMPORTED_MODULE_1__.getToken]
@@ -5464,6 +5469,10 @@ __webpack_require__.r(__webpack_exports__);
           })
         };
         fetch(_url, _config).then(function (response) {
+          return response.json();
+        }).then(function (clientUpdated) {
+          _this.$emit('client-updated-event', clientUpdated);
+
           alert('Client update success');
         })["catch"](function (error) {
           return alert('Error api');
@@ -5565,7 +5574,7 @@ var render = function render() {
       },
       on: {
         click: function click($event) {
-          return _vm.editClient(client);
+          return _vm.editClientOpen(client);
         }
       }
     }, [_vm._v("Edit")]), _vm._v(" "), _c("button", {
@@ -5584,7 +5593,8 @@ var render = function render() {
       client: _vm.clientSelected
     },
     on: {
-      "new-client-created-event": _vm.addNewClient
+      "new-client-created-event": _vm.addNewClient,
+      "client-updated-event": _vm.updateClient
     }
   })], 1);
 };
