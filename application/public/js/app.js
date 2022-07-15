@@ -5266,8 +5266,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./resources/js/constants.js");
-/* harmony import */ var _mixins__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../mixins */ "./resources/js/mixins.js");
+/* harmony import */ var _clientHttp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../clientHttp */ "./resources/js/clientHttp.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants */ "./resources/js/constants.js");
+/* harmony import */ var _mixins__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../mixins */ "./resources/js/mixins.js");
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -5285,21 +5287,17 @@ __webpack_require__.r(__webpack_exports__);
     deleteClient: function deleteClient(id) {
       var _this = this;
 
-      var token = this.getToken();
-      var url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client/").concat(id);
-      var config = {
-        method: 'delete',
-        headers: new Headers({
-          Authorization: "Bearer ".concat(token)
-        })
-      };
-      fetch(url, config).then(function (response) {
+      _clientHttp__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"]("/api/client/".concat(id), {
+        headers: {
+          Authorization: "Bearer ".concat(this.getToken())
+        }
+      }).then(function () {
         _this.clients = _this.clients.filter(function (client) {
           return client.id != id;
         });
         alert('Delete client success');
-      })["catch"](function (error) {
-        return alert('Create error');
+      })["catch"](function () {
+        alert('Sorry, we have some problem ...');
       });
     },
     editClient: function editClient(client) {
@@ -5308,21 +5306,15 @@ __webpack_require__.r(__webpack_exports__);
     loadList: function loadList() {
       var _this2 = this;
 
-      var token = this.getToken();
-      var url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client");
-      var config = {
-        method: 'get',
-        headers: new Headers({
-          'Authorization': "Bearer ".concat(token)
-        })
-      };
-      fetch(url, config).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        _this2.clients = data;
+      _clientHttp__WEBPACK_IMPORTED_MODULE_0__["default"].get('/api/client', {
+        headers: {
+          Authorization: "Bearer ".concat(this.getToken())
+        }
+      }).then(function (response) {
+        _this2.clients = response.data;
         _this2.loading = false;
       })["catch"](function (error) {
-        return alert('Error api');
+        alert('Sorry, we have some problem ...');
       });
     },
     addNewClient: function addNewClient(client) {
@@ -5338,7 +5330,7 @@ __webpack_require__.r(__webpack_exports__);
       this.clientSelected = null;
     }
   },
-  mixins: [_mixins__WEBPACK_IMPORTED_MODULE_1__.getToken]
+  mixins: [_mixins__WEBPACK_IMPORTED_MODULE_2__.getToken]
 });
 
 /***/ }),
@@ -5355,6 +5347,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants.js */ "./resources/js/constants.js");
+/* harmony import */ var _clientHttp__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../clientHttp */ "./resources/js/clientHttp.js");
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['csrf_token'],
@@ -5376,24 +5370,32 @@ __webpack_require__.r(__webpack_exports__);
         return;
       }
 
-      var url = "".concat(_constants_js__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/get-token");
-      var config = {
-        method: 'post',
-        body: new URLSearchParams({
-          'email': this.email,
-          'password': this.password
-        })
-      };
-      fetch(url, config).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        if (data.token) {
-          document.cookie = "".concat(_constants_js__WEBPACK_IMPORTED_MODULE_0__.COOKIE_TOKEN, "=").concat(data.token);
-          window.location.href = _constants_js__WEBPACK_IMPORTED_MODULE_0__.URL_BASE;
-        }
+      _clientHttp__WEBPACK_IMPORTED_MODULE_1__["default"].post('/api/get-token', {
+        'email': this.email,
+        'password': this.password
+      }).then(function (response) {
+        document.cookie = "".concat(_constants_js__WEBPACK_IMPORTED_MODULE_0__.COOKIE_TOKEN, "=").concat(response.data.token);
+        window.location.href = _constants_js__WEBPACK_IMPORTED_MODULE_0__.URL_BASE;
       })["catch"](function (error) {
-        console.log('Fetch error', error);
-        alert('We had a little problem, please try later');
+        //https://axios-http.com/docs/handling_errors
+        if (error.response) {
+          switch (error.response.status) {
+            case 422:
+              console.error('Payload validation error to get token');
+              alert('We had a little problem, please try later');
+              break;
+
+            case 401:
+              alert('User or password invalid.');
+              break;
+
+            default:
+              console.error('Req to get token, result in status code '.error.response.status);
+              alert('We had a little problem, please try later');
+          }
+        } else {
+          alert('We had a little problem, please try later');
+        }
       });
     }
   }
@@ -5412,8 +5414,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./resources/js/constants.js");
-/* harmony import */ var _mixins__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../mixins */ "./resources/js/mixins.js");
+/* harmony import */ var _clientHttp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../clientHttp */ "./resources/js/clientHttp.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants */ "./resources/js/constants.js");
+/* harmony import */ var _mixins__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../mixins */ "./resources/js/mixins.js");
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -5451,7 +5455,14 @@ __webpack_require__.r(__webpack_exports__);
         return;
       }
 
-      var token = this.getToken();
+      var config = {
+        headers: {
+          Authorization: "Bearer ".concat(this.getToken())
+        }
+      };
+      var params = {
+        name: this.name
+      };
 
       if (this.clientData) {
         // EDIT
@@ -5460,56 +5471,34 @@ __webpack_require__.r(__webpack_exports__);
           return;
         }
 
-        var _url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client/").concat(this.clientData.id);
+        _clientHttp__WEBPACK_IMPORTED_MODULE_0__["default"].put("/api/client/".concat(this.clientData.id), params, config).then(function (response) {
+          var client = response.data;
 
-        var _config = {
-          method: 'put',
-          body: JSON.stringify({
-            name: this.name
-          }),
-          headers: new Headers({
-            'Authorization': "Bearer ".concat(token),
-            'Content-Type': 'application/json'
-          })
-        };
-        fetch(_url, _config).then(function (response) {
-          return response.json();
-        }).then(function (clientUpdated) {
-          _this.$emit('client-updated-event', clientUpdated);
+          _this.$emit('client-updated-event', client);
 
           alert('Client update success');
-        })["catch"](function (error) {
-          return alert('Error api');
+        })["catch"](function () {
+          alert('Sorry, we have some problem ...');
         });
         this.closeModal();
         return;
       } // CREATE
 
 
-      var formData = new FormData();
-      formData.append('name', this.name);
-      var url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client");
-      var config = {
-        method: 'post',
-        body: formData,
-        headers: new Headers({
-          Authorization: "Bearer ".concat(token)
-        })
-      };
-      fetch(url, config).then(function (response) {
-        return response.json();
-      }).then(function (client) {
+      _clientHttp__WEBPACK_IMPORTED_MODULE_0__["default"].post("/api/client", params, config).then(function (response) {
+        var client = response.data;
+
         _this.$emit('new-client-created-event', client);
 
         _this.closeModal();
 
         alert('Create client success');
-      })["catch"](function (error) {
-        return alert('Create error');
+      })["catch"](function () {
+        alert('Sorry, we have some problem ...');
       });
     }
   },
-  mixins: [_mixins__WEBPACK_IMPORTED_MODULE_1__.getToken]
+  mixins: [_mixins__WEBPACK_IMPORTED_MODULE_2__.getToken]
 });
 
 /***/ }),
@@ -6112,6 +6101,28 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/clientHttp.js":
+/*!************************************!*\
+  !*** ./resources/js/clientHttp.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constants */ "./resources/js/constants.js");
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (axios__WEBPACK_IMPORTED_MODULE_0___default().create({
+  baseURL: _constants__WEBPACK_IMPORTED_MODULE_1__.URL_BASE
+}));
 
 /***/ }),
 
@@ -40933,6 +40944,18 @@ module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBun
 /******/ 				}
 /******/ 			}
 /******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
 /******/ 		};
 /******/ 	})();
 /******/ 	
