@@ -17,12 +17,15 @@
                                 </tr>
                             </thead>
 
-                            <tbody v-if="clients.length > 0">
+                            <tbody v-if="clients.length > 0 && !loading">
                                 <tr v-for="client in clients">
                                     <td>{{ client.id }}</td>
                                     <td>{{ client.name }}</td>
                                     <td>
-                                        <button type="button" @click="deleteClient(client.id)">Excluir</button>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#formModal" @click="editClient(client)">Edit</button>
+                                        <button type="button" class="btn btn-danger"
+                                            @click="deleteClient(client.id)">Delete</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -58,28 +61,9 @@
             </div>
         </div>
 
-        <!--Modal-->
-        <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="formModalLabel">Create client</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="nameToCreate" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="nameToCreate" v-model="nameToCreate" placeholder="Client name">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="btnCloseModal" type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="clearModal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="createClient">Save</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--Modal-->
+        <modal-form-component @new-client-created-event="addNewClient" @client-updated-event="updateClient" @modal-closed-event="resetModal"
+            :client="clientSelected"></modal-form-component>
+
     </div>
 </template>
 
@@ -92,64 +76,13 @@ export default {
         return {
             clients: [],
             loading: true,
-            nameToCreate: '',
+            clientSelected: null,
         }
     },
     mounted() {
-        const token = this.getToken();
-        const url = `${URL_BASE}/api/client`;
-        const config = {
-            method: 'get',
-            headers: new Headers({
-                'Authorization': `Bearer ${token}`
-            })
-        };
-        fetch(url, config)
-            .then(response => response.json())
-            .then(data => {
-                this.clients = data;
-                this.loading = false;
-            })
-            .catch(error => alert('Error api'))
+        this.loadList();
     },
     methods: {
-        clearModal() {
-            this.nameToCreate = '';
-        },
-        createClient() {
-            if (this.nameToCreate.length == 0) {
-                alert('Name is required');
-                this.closeModal();
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('name', this.nameToCreate);
-
-            const token = this.getToken();
-
-            const url = `${URL_BASE}/api/client`;
-            const config = {
-                method: 'post',
-                body: formData,
-                headers: new Headers({
-                    Authorization: `Bearer ${token}`
-                })
-            };
-
-            fetch(url, config)
-                .then(response => response.json())
-                .then(client => {
-                    this.clients.push(client);
-                    this.closeModal();
-                    alert('Create client success');
-
-                })
-                .catch(error => alert('Create error'));
-        },
-        closeModal() {
-            btnCloseModal.click();
-        },
         deleteClient(id) {
             const token = this.getToken();
 
@@ -168,6 +101,36 @@ export default {
 
                 })
                 .catch(error => alert('Create error'));
+        },
+        editClient(client) {
+            this.clientSelected = client;
+        },
+        loadList() {
+            const token = this.getToken();
+            const url = `${URL_BASE}/api/client`;
+            const config = {
+                method: 'get',
+                headers: new Headers({
+                    'Authorization': `Bearer ${token}`
+                })
+            };
+            fetch(url, config)
+                .then(response => response.json())
+                .then(data => {
+                    this.clients = data;
+                    this.loading = false;
+                })
+                .catch(error => alert('Error api'))
+        },
+        addNewClient(client) {
+            this.clients.push(client);
+        },
+        updateClient(client) {
+            const index = this.clients.findIndex(c => c.id == client.id);
+            this.$set(this.clients, index, client);
+        },
+        resetModal() {
+            this.clientSelected = null;
         }
     },
     mixins: [getToken]
