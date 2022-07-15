@@ -108,7 +108,7 @@ export default {
                 this.clients = response.data;
                 this.loading = false;
             }).catch(error => {
-                alert('Error api');
+                alert('Sorry, we have some problem ...');
             })
         },
         addNewClient(client) {

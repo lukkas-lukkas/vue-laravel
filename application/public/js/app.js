@@ -5314,7 +5314,7 @@ __webpack_require__.r(__webpack_exports__);
         _this2.clients = response.data;
         _this2.loading = false;
       })["catch"](function (error) {
-        alert('Error api');
+        alert('Sorry, we have some problem ...');
       });
     },
     addNewClient: function addNewClient(client) {
@@ -5414,8 +5414,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./resources/js/constants.js");
-/* harmony import */ var _mixins__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../mixins */ "./resources/js/mixins.js");
+/* harmony import */ var _clientHttp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../clientHttp */ "./resources/js/clientHttp.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants */ "./resources/js/constants.js");
+/* harmony import */ var _mixins__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../mixins */ "./resources/js/mixins.js");
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -5453,7 +5455,14 @@ __webpack_require__.r(__webpack_exports__);
         return;
       }
 
-      var token = this.getToken();
+      var config = {
+        headers: {
+          Authorization: "Bearer ".concat(this.getToken())
+        }
+      };
+      var params = {
+        name: this.name
+      };
 
       if (this.clientData) {
         // EDIT
@@ -5462,56 +5471,34 @@ __webpack_require__.r(__webpack_exports__);
           return;
         }
 
-        var _url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client/").concat(this.clientData.id);
+        _clientHttp__WEBPACK_IMPORTED_MODULE_0__["default"].put("/api/client/".concat(this.clientData.id), params, config).then(function (response) {
+          var client = response.data;
 
-        var _config = {
-          method: 'put',
-          body: JSON.stringify({
-            name: this.name
-          }),
-          headers: new Headers({
-            'Authorization': "Bearer ".concat(token),
-            'Content-Type': 'application/json'
-          })
-        };
-        fetch(_url, _config).then(function (response) {
-          return response.json();
-        }).then(function (clientUpdated) {
-          _this.$emit('client-updated-event', clientUpdated);
+          _this.$emit('client-updated-event', client);
 
           alert('Client update success');
-        })["catch"](function (error) {
-          return alert('Error api');
+        })["catch"](function () {
+          alert('Sorry, we have some problem ...');
         });
         this.closeModal();
         return;
       } // CREATE
 
 
-      var formData = new FormData();
-      formData.append('name', this.name);
-      var url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client");
-      var config = {
-        method: 'post',
-        body: formData,
-        headers: new Headers({
-          Authorization: "Bearer ".concat(token)
-        })
-      };
-      fetch(url, config).then(function (response) {
-        return response.json();
-      }).then(function (client) {
+      _clientHttp__WEBPACK_IMPORTED_MODULE_0__["default"].post("/api/client", params, config).then(function (response) {
+        var client = response.data;
+
         _this.$emit('new-client-created-event', client);
 
         _this.closeModal();
 
         alert('Create client success');
-      })["catch"](function (error) {
-        return alert('Create error');
+      })["catch"](function () {
+        alert('Sorry, we have some problem ...');
       });
     }
   },
-  mixins: [_mixins__WEBPACK_IMPORTED_MODULE_1__.getToken]
+  mixins: [_mixins__WEBPACK_IMPORTED_MODULE_2__.getToken]
 });
 
 /***/ }),

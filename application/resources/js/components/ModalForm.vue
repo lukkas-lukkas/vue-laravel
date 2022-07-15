@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import clientHttp from '../clientHttp';
 import { URL_BASE } from '../constants';
 import { getToken } from '../mixins';
 
@@ -41,7 +42,7 @@ export default {
             if (this.client) {
                 this.name = this.client.name;
             }
-            
+
             this.clientData = this.client;
         }
     },
@@ -61,60 +62,44 @@ export default {
                 return;
             }
 
-            const token = this.getToken();
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${this.getToken()}`,
+                }
+            };
+
+            const params = {
+                name: this.name,
+            };
 
             if (this.clientData) {
                 // EDIT
-
                 if (this.name == this.clientData.name) {
                     this.closeModal();
                     return;
                 }
-                
-                const url = `${URL_BASE}/api/client/${this.clientData.id}`;
-                const config = {
-                    method: 'put',
-                    body: JSON.stringify({name: this.name}),
-                    headers: new Headers({
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    })
-                };
 
-                fetch(url, config)
-                    .then(response => response.json())
-                    .then(clientUpdated => {
-                        this.$emit('client-updated-event', clientUpdated);
-                        alert('Client update success');                    
-                    })
-                    .catch(error => alert('Error api'));
+                clientHttp.put(`/api/client/${this.clientData.id}`, params, config).then(response => {
+                    const client = response.data;
+                    this.$emit('client-updated-event', client);
+                    alert('Client update success');
+                }).catch(() => {
+                    alert('Sorry, we have some problem ...');
+                });
+
                 this.closeModal();
                 return;
             }
 
             // CREATE
-
-            const formData = new FormData();
-            formData.append('name', this.name);
-
-            const url = `${URL_BASE}/api/client`;
-            const config = {
-                method: 'post',
-                body: formData,
-                headers: new Headers({
-                    Authorization: `Bearer ${token}`
-                })
-            };
-
-            fetch(url, config)
-                .then(response => response.json())
-                .then(client => {
-                    this.$emit('new-client-created-event', client);
-                    this.closeModal();
-                    alert('Create client success');
-
-                })
-                .catch(error => alert('Create error'));
+            clientHttp.post(`/api/client`, params, config).then(response => {
+                const client = response.data;
+                this.$emit('new-client-created-event', client);
+                this.closeModal();
+                alert('Create client success');
+            }).catch(() => {
+                alert('Sorry, we have some problem ...');
+            });
         }
     },
     mixins: [getToken]
