@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import clientHttp from '../clientHttp';
 import { URL_BASE } from '../constants';
 import { getToken } from '../mixins';
 
@@ -83,24 +84,17 @@ export default {
         this.loadList();
     },
     methods: {
-        deleteClient(id) {
-            const token = this.getToken();
-
-            const url = `${URL_BASE}/api/client/${id}`;
-            const config = {
-                method: 'delete',
-                headers: new Headers({
-                    Authorization: `Bearer ${token}`
-                })
-            };
-
-            fetch(url, config)
-                .then(response => {
-                    this.clients = this.clients.filter(client => client.id != id);
-                    alert('Delete client success');
-
-                })
-                .catch(error => alert('Create error'));
+        deleteClient(id) {          
+            clientHttp.delete(`/api/client/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${this.getToken()}`
+                }
+            }).then(() => {
+                this.clients = this.clients.filter(client => client.id != id);
+                alert('Delete client success');
+            }).catch(() => {
+                alert('Sorry, we have some problem ...')
+            });
         },
         editClient(client) {
             this.clientSelected = client;

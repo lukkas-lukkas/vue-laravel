@@ -5266,8 +5266,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants */ "./resources/js/constants.js");
-/* harmony import */ var _mixins__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../mixins */ "./resources/js/mixins.js");
+/* harmony import */ var _clientHttp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../clientHttp */ "./resources/js/clientHttp.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants */ "./resources/js/constants.js");
+/* harmony import */ var _mixins__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../mixins */ "./resources/js/mixins.js");
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -5285,21 +5287,17 @@ __webpack_require__.r(__webpack_exports__);
     deleteClient: function deleteClient(id) {
       var _this = this;
 
-      var token = this.getToken();
-      var url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client/").concat(id);
-      var config = {
-        method: 'delete',
-        headers: new Headers({
-          Authorization: "Bearer ".concat(token)
-        })
-      };
-      fetch(url, config).then(function (response) {
+      _clientHttp__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"]("/api/client/".concat(id), {
+        headers: {
+          Authorization: "Bearer ".concat(this.getToken())
+        }
+      }).then(function () {
         _this.clients = _this.clients.filter(function (client) {
           return client.id != id;
         });
         alert('Delete client success');
-      })["catch"](function (error) {
-        return alert('Create error');
+      })["catch"](function () {
+        alert('Sorry, we have some problem ...');
       });
     },
     editClient: function editClient(client) {
@@ -5309,7 +5307,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       var token = this.getToken();
-      var url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_0__.URL_BASE, "/api/client");
+      var url = "".concat(_constants__WEBPACK_IMPORTED_MODULE_1__.URL_BASE, "/api/client");
       var config = {
         method: 'get',
         headers: new Headers({
@@ -5338,7 +5336,7 @@ __webpack_require__.r(__webpack_exports__);
       this.clientSelected = null;
     }
   },
-  mixins: [_mixins__WEBPACK_IMPORTED_MODULE_1__.getToken]
+  mixins: [_mixins__WEBPACK_IMPORTED_MODULE_2__.getToken]
 });
 
 /***/ }),
