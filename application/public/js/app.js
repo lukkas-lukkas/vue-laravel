@@ -5415,9 +5415,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _clientHttp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../clientHttp */ "./resources/js/clientHttp.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants */ "./resources/js/constants.js");
-/* harmony import */ var _mixins__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../mixins */ "./resources/js/mixins.js");
-
+/* harmony import */ var _mixins__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../mixins */ "./resources/js/mixins.js");
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -5435,6 +5433,11 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       this.clientData = this.client;
+    }
+  },
+  computed: {
+    modalTitle: function modalTitle() {
+      return this.clientData ? 'Edit' : 'Create';
     }
   },
   methods: {
@@ -5498,7 +5501,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
   },
-  mixins: [_mixins__WEBPACK_IMPORTED_MODULE_2__.getToken]
+  mixins: [_mixins__WEBPACK_IMPORTED_MODULE_1__.getToken]
 });
 
 /***/ }),
@@ -5869,7 +5872,7 @@ var render = function render() {
     attrs: {
       id: "formModalLabel"
     }
-  }, [_vm._v("Create client")]), _vm._v(" "), _c("button", {
+  }, [_vm._v(_vm._s(_vm.modalTitle) + " client")]), _vm._v(" "), _c("button", {
     staticClass: "btn-close",
     attrs: {
       type: "button",

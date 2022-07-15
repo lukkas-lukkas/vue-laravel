@@ -3,7 +3,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="formModalLabel">Create client</h5>
+                    <h5 class="modal-title" id="formModalLabel">{{ modalTitle }} client</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                         @click="clearModal"></button>
                 </div>
@@ -26,7 +26,6 @@
 
 <script>
 import clientHttp from '../clientHttp';
-import { URL_BASE } from '../constants';
 import { getToken } from '../mixins';
 
 export default {
@@ -44,6 +43,11 @@ export default {
             }
 
             this.clientData = this.client;
+        }
+    },
+    computed: {
+        modalTitle() {
+            return this.clientData ? 'Edit' : 'Create';
         }
     },
     methods: {
