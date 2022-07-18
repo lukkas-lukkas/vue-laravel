@@ -1,6 +1,7 @@
 # Application Clients adm
 
 Simple project created to show examples of how to use Vue.js and Bootstrap on the front-end and Laravel on the back-end.
+- Vue 2
 - Authenticate with JWT
 - Clients CRUD
 - Events using modal
